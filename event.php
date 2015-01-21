@@ -44,7 +44,7 @@ class Event {
    * </code>
    *
    * @param  string   $name The name of the event.
-   * @param  function $callback The callback function.
+   * @param  callable $callback The callback function.
    * @param  bool     $once Only fire the callback once.
    * @return void
    */
@@ -56,7 +56,7 @@ class Event {
    * Replace the handlers for an event with a new handler.
    *
    * @param  string   $name The name of the event.
-   * @param  function $callback The callback function.
+   * @param  callable $callback The callback function.
    * @param  bool     $once Only fire the callback once.
    * @return void
    */
@@ -71,13 +71,13 @@ class Event {
    * The event handler is added to the end of the queue.
    *
    * @param  string   $name The name of the event.
-   * @param  function $callback The callback function.
+   * @param  callable $callback The callback function.
    * @param  bool     $once Only fire the callback once.
    * @return void
    */
   public static function append($name, $callback, $once = FALSE) {
     static::$events[$name][] = array(
-      $once ? 'once' : 'always' => $callback
+        $once ? 'once' : 'always' => $callback
     );
   }
 
@@ -86,15 +86,15 @@ class Event {
    * added to the start of the queue.
    *
    * @param  string   $name The name of the event.
-   * @param  function $callback The callback function.
+   * @param  callable $callback The callback function.
    * @param  bool     $once Only fire the callback once.
    * @return void
    */
   public static function insert($name, $callback, $once = FALSE) {
     if (static::bound($name)) {
       array_unshift(
-        static::$events[$name],
-        array($once ? 'once' : 'always' => $callback)
+          static::$events[$name],
+          array($once ? 'once' : 'always' => $callback)
       );
     } else {
       static::append($name, $callback, $once);
@@ -120,7 +120,7 @@ class Event {
    *
    * @param  string $name The name of the event.
    * @param  array  $data The data passed to the event handlers.
-   * @param  array  $stop Return after the first non-empty response.
+   * @param  bool  $stop Return after the first non-empty response.
    * @return mixed
    */
   public static function fire($name, $data = array(), $stop = FALSE) {
@@ -131,7 +131,7 @@ class Event {
         list($type, $callback) = each($value);
 
         $responses[] = $response =
-          call_user_func_array($callback, (array) $data);
+            call_user_func_array($callback, (array) $data);
 
         if ($type == 'once') unset(static::$events[$name][$key]);
         if ($stop && !empty($response)) return $responses;
@@ -148,7 +148,7 @@ class Event {
    * The return value is not wrapped in an array.
    *
    * @param  string $name The name of the event.
-   * @param  string $data The data passed to the event handlers.
+   * @param  array $data The data passed to the event handlers.
    * @return mixed
    */
   public static function first($name, $data = array()) {
@@ -163,7 +163,7 @@ class Event {
    * The return value is not wrapped in an array.
    *
    * @param  string $name The name of the event.
-   * @param  string $data The data passed to the event handlers.
+   * @param  array $data The data passed to the event handlers.
    * @return mixed
    */
   public static function until($name, $data = array()) {
@@ -186,7 +186,7 @@ class Event {
    *
    * To remove the event handlers for a specific event, pass the
    * name of the event to the method. To remove all event handlers,
-   * call the method without any arguments. 
+   * call the method without any arguments.
    *
    * @param  string $name The name of the event.
    * @return void
@@ -225,7 +225,7 @@ class Event {
    */
   public static function names(){
     return array_keys(static::$events);
-}
+  }
 
   /**
    * Remove an element from an array, or clear an entire array.
